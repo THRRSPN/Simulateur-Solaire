@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0B1120">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Simulateur Solaire — Artisans Écologiques</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100vh;overflow-x:hidden}
+body{background:#0B1120;color:#F0F4FF;font-family:'DM Sans',sans-serif;font-size:16px}
+
+/* HEADER */
+.header{
+  background:rgba(11,17,32,.95);border-bottom:1px solid #1F2D45;
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:38px;height:38px;border-radius:8px;
+  background:linear-gradient(135deg,#F5A623,#E8940A);
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem
+}
+.logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem}
+.logo-sub{font-size:.65rem;color:#6B82A0;margin-top:1px}
+.rge{
+  padding:4px 10px;border-radius:20px;font-size:.65rem;font-weight:600;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:#4ADE80
+}
+
+/* HERO */
+.hero{padding:40px 20px 30px;text-align:center}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 16px;border-radius:20px;margin-bottom:20px;
+  background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);
+  color:#FFD580;font-size:.78rem;font-weight:500
+}
+.dot{width:6px;height:6px;border-radius:50%;background:#F5A623;display:inline-block;animation:p 1.5s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+h1{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.15;margin-bottom:12px;
+  background:linear-gradient(135deg,#fff,#FFD580);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero-sub{color:#6B82A0;font-size:.95rem;line-height:1.6;max-width:400px;margin:0 auto}
+
+/* PROGRESS */
+.prog-wrap{padding:0 20px;margin-bottom:8px}
+.prog-bar{height:4px;background:#1F2D45;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#F5A623,#00D4FF);border-radius:2px;transition:width .4s}
+.prog-steps{display:flex;justify-content:space-between;margin-top:8px;padding:0 4px}
+.prog-step{font-size:.65rem;color:#6B82A0;font-weight:500;text-align:center;flex:1}
+.prog-step.active{color:#F5A623;font-weight:600}
+.prog-step.done{color:#22C55E}
+
+/* SIMULATOR */
+.sim{max-width:600px;margin:0 auto;padding:0 16px 60px}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block;animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card{
+  background:#111827;border:1px solid #1F2D45;border-radius:14px;
+  padding:22px 18px;margin-bottom:14px
+}
+.card-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:6px}
+.card-sub{color:#6B82A0;font-size:.85rem;line-height:1.5;margin-bottom:20px}
+
+/* CHOIX BOUTONS — gros et tactiles */
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.opts.row{flex-direction:row;flex-wrap:wrap}
+.opts.row .opt{flex:1;min-width:calc(50% - 5px)}
+.opts.row3 .opt{min-width:calc(33.3% - 7px)}
+
+.opt{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 14px;border-radius:12px;
+  border:2px solid #1F2D45;background:rgba(255,255,255,.02);
+  cursor:pointer;transition:border-color .2s,background .2s;
+  min-height:56px;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none
+}
+.opt:active{transform:scale(.98)}
+.opt.sel{border-color:#F5A623;background:rgba(245,166,35,.08)}
+.opt-icon{font-size:1.3rem;flex-shrink:0;width:28px;text-align:center}
+.opt-txt{font-size:.88rem;font-weight:500;line-height:1.3}
+.opt-sub{font-size:.72rem;color:#6B82A0;margin-top:2px}
+
+/* MULTI-SELECT info */
+.multi-info{font-size:.72rem;color:#6B82A0;margin-bottom:10px;font-style:italic}
+
+/* SLIDER */
+.sl-wrap{margin:16px 0}
+.sl-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sl-lbl{font-size:.82rem;color:#6B82A0;font-weight:500}
+.sl-val{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;
+  color:#F5A623;background:rgba(245,166,35,.1);padding:5px 14px;border-radius:8px
+}
+input[type=range]{
+  width:100%;height:8px;-webkit-appearance:none;appearance:none;
+  background:#1F2D45;border-radius:4px;outline:none;cursor:pointer
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+  background:#F5A623;cursor:pointer;border:3px solid #fff;
+  box-shadow:0 0 12px rgba(245,166,35,.5)
+}
+.sl-hints{display:flex;justify-content:space-between;margin-top:6px}
+.sl-hints span{font-size:.68rem;color:#6B82A0}
+
+/* BOUTONS RAPIDES CONSO */
+.quick-btns{display:flex;gap:8px;margin-top:12px}
+.qbtn{
+  flex:1;padding:10px 4px;border-radius:10px;
+  border:1.5px solid #1F2D45;background:transparent;
+  color:#6B82A0;cursor:pointer;font-size:.78rem;text-align:center;
+  touch-action:manipulation;transition:all .2s
+}
+.qbtn:active{transform:scale(.96)}
+.qbtn.sel{border-color:#F5A623;color:#F5A623;background:rgba(245,166,35,.08)}
+
+/* NAVIGATION */
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn-back{
+  padding:15px 18px;border-radius:12px;border:1.5px solid #1F2D45;
+  background:transparent;color:#6B82A0;cursor:pointer;font-size:.88rem;
+  touch-action:manipulation;font-family:'DM Sans',sans-serif;font-weight:500
+}
+.btn-next{
+  flex:1;padding:15px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#F5A623,#E8940A);
+  color:#000;font-family:'Syne',sans-serif;font-weight:800;
+  font-size:.95rem;cursor:pointer;touch-action:manipulation;
+  box-shadow:0 4px 20px rgba(245,166,35,.35);letter-spacing:.3px
+}
+.btn-next:active{transform:scale(.97)}
+
+/* RÉSULTATS */
+.res-hero{
+  background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(0,212,255,.05));
+  border:1px solid rgba(34,197,94,.2);border-radius:14px;
+  padding:24px 18px;margin-bottom:14px;text-align:center
+}
+.res-title{font-size:.72rem;color:#6B82A0;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:rgba(0,0,0,.25);border-radius:10px;padding:14px 8px}
+.kpi-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:#F5A623}
+.kpi-lbl{font-size:.62rem;color:#6B82A0;margin-top:5px;font-weight:500;text-transform:uppercase;letter-spacing:.3px}
+
+/* TABLEAU SCÉNARIOS */
+.sc-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:280px}
+th{background:rgba(245,166,35,.1);color:#FFD580;padding:10px 8px;text-align:center;font-size:.68rem;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+th:first-child{text-align:left}
+td{padding:11px 8px;border-bottom:1px solid #1F2D45;text-align:center;vertical-align:middle}
+td:first-child{text-align:left}
+tr.main td{background:rgba(34,197,94,.06);font-weight:600}
+.gain{color:#22C55E;font-weight:700}
+.roi{color:#00D4FF}
+
+/* DÉTAIL */
+.detail-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.detail-table td{padding:10px 4px;border-bottom:1px solid #1F2D45}
+.detail-table td:last-child{text-align:right;font-weight:600;color:#22C55E}
+.detail-table .hd td{padding:14px 4px 6px;font-size:.68rem;color:#6B82A0;text-transform:uppercase;letter-spacing:1px;border-bottom:none;font-weight:600}
+
+/* CTA */
+.cta{
+  background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.05));
+  border:1px solid rgba(245,166,35,.25);border-radius:14px;
+  padding:24px 18px;margin-top:14px;text-align:center
+}
+.cta-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:8px}
+.cta-sub{color:#6B82A0;font-size:.84rem;line-height:1.5;margin-bottom:20px}
+
+/* INPUTS FORMULAIRE */
+.field{margin-bottom:12px;text-align:left}
+.field label{display:block;font-size:.72rem;color:#6B82A0;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+.field input{
+  width:100%;padding:14px 16px;border-radius:10px;
+  border:1.5px solid #1F2D45;background:rgba(255,255,255,.03);
+  color:#F0F4FF;font-family:'DM Sans',sans-serif;font-size:16px;outline:none
+}
+.field input:focus{border-color:#F5A623}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.btn-cta{
+  width:100%;padding:16px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#F5A623,#E8940A);
+  color:#000;font-family:'Syne',sans-serif;font-weight:800;
+  font-size:1rem;cursor:pointer;touch-action:manipulation;
+  box-shadow:0 4px 24px rgba(245,166,35,.4);letter-spacing:.3px;margin-bottom:16px
+}
+.btn-cta:active{transform:scale(.97)}
+
+.contacts{display:flex;flex-direction:column;gap:8px;align-items:center}
+.contact-link{
+  display:flex;align-items:center;gap:8px;
+  color:#00D4FF;text-decoration:none;font-size:.85rem;font-weight:500
+}
+
+.note{font-size:.7rem;color:#6B82A0;text-align:center;margin-top:12px;line-height:1.6}
+
+/* CONFIRMATION */
+.confirm{text-align:center;padding:20px}
+.confirm-icon{font-size:3rem;margin-bottom:12px}
+.confirm-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:8px}
+.confirm-sub{color:#6B82A0;font-size:.85rem;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">☀️</div>
+    <div>
+      <div class="logo-text">Artisans Écologiques</div>
+      <div class="logo-sub">Installateur RGE · Thionville · Moselle</div>
+    </div>
+  </div>
+  <div class="rge">✓ RGE</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge"><span class="dot"></span> Simulation gratuite</div>
+  <h1>Combien peut vous rapporter le solaire ?</h1>
+  <p class="hero-sub">5 questions · Résultats immédiats · Sans engagement</p>
+</div>
+
+<div class="sim">
+
+  <!-- PROGRESS -->
+  <div class="prog-wrap">
+    <div class="prog-bar"><div class="prog-fill" id="prog" style="width:20%"></div></div>
+    <div class="prog-steps">
+      <div class="prog-step active" id="ps1">Logement</div>
+      <div class="prog-step" id="ps2">Conso</div>
+      <div class="prog-step" id="ps3">Toiture</div>
+      <div class="prog-step" id="ps4">Équipements</div>
+      <div class="prog-step" id="ps5">Résultats</div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 1 -->
+  <div class="panel active" id="p1">
+    <div class="card">
+      <div class="card-title">🏡 Votre logement</div>
+      <div class="card-sub">Informations de base sur votre maison.</div>
+
+      <div class="opts row">
+        <div class="opt sel" onclick="ch(this,'chauf','elec')">
+          <span class="opt-icon">⚡</span>
+          <div><div class="opt-txt">Chauffage électrique</div><div class="opt-sub">Radiateurs</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'chauf','pac')">
+          <span class="opt-icon">🌡️</span>
+          <div><div class="opt-txt">Pompe à chaleur</div><div class="opt-sub">Air/air ou air/eau</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'chauf','gaz')">
+          <span class="opt-icon">🔥</span>
+          <div><div class="opt-txt">Gaz / Fioul</div><div class="opt-sub">Chaudière</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'chauf','bois')">
+          <span class="opt-icon">🪵</span>
+          <div><div class="opt-txt">Bois / Poêle</div></div>
+        </div>
+      </div>
+
+      <div class="opts row" style="margin-top:8px">
+        <div class="opt" onclick="ch(this,'occ','12')">
+          <span class="opt-icon">👤</span>
+          <div><div class="opt-txt">1 – 2 personnes</div></div>
+        </div>
+        <div class="opt sel" onclick="ch(this,'occ','34')">
+          <span class="opt-icon">👨‍👩‍👧</span>
+          <div><div class="opt-txt">3 – 4 personnes</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'occ','5+')">
+          <span class="opt-icon">👨‍👩‍👧‍👦</span>
+          <div><div class="opt-txt">5 personnes et +</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-next" onclick="go(2)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="panel" id="p2">
+    <div class="card">
+      <div class="card-title">⚡ Votre consommation</div>
+      <div class="card-sub">Choisissez la méthode selon les infos que vous avez.</div>
+
+      <!-- Choix méthode -->
+      <div class="opts" style="margin-bottom:20px">
+        <div class="opt sel" onclick="setMeth(this,'annuel')">
+          <span class="opt-icon">📄</span>
+          <div><div class="opt-txt">Je connais ma conso annuelle</div><div class="opt-sub">Un seul chiffre sur ma facture EDF</div></div>
+        </div>
+        <div class="opt" onclick="setMeth(this,'semestre')">
+          <span class="opt-icon">📊</span>
+          <div><div class="opt-txt">J'ai mes factures été et hiver</div><div class="opt-sub">2 factures de 6 mois</div></div>
+        </div>
+        <div class="opt" onclick="setMeth(this,'mensuel')">
+          <span class="opt-icon">📱</span>
+          <div><div class="opt-txt">J'ai mes 12 mois Linky</div><div class="opt-sub">Via l'appli Enedis ou mon espace client</div></div>
+        </div>
+      </div>
+
+      <!-- MÉTHODE 1 — Annuel -->
+      <div id="m-annuel">
+        <div class="sl-wrap">
+          <div class="sl-top">
+            <span class="sl-lbl">Consommation annuelle</span>
+            <span class="sl-val" id="cv">5 000 kWh</span>
+          </div>
+          <input type="range" id="csl" min="2000" max="20000" step="500" value="5000" oninput="uC(this.value)">
+          <div class="sl-hints"><span>2 000 kWh</span><span>20 000 kWh</span></div>
+        </div>
+        <div class="quick-btns">
+          <button class="qbtn" onclick="sC(3000)">3 000<br><small>Studio</small></button>
+          <button class="qbtn sel" onclick="sC(5000)">5 000<br><small>Famille</small></button>
+          <button class="qbtn" onclick="sC(8000)">8 000<br><small>Grande maison</small></button>
+          <button class="qbtn" onclick="sC(12000)">12 000<br><small>Très grande</small></button>
+        </div>
+      </div>
+
+      <!-- MÉTHODE 2 — Semestre -->
+      <div id="m-semestre" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:.75rem;color:#F5A623;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">☀️ Printemps / Été</div>
+            <div style="font-size:.72rem;color:#6B82A0;margin-bottom:8px">Avril → Septembre</div>
+            <div class="sl-wrap" style="margin:8px 0">
+              <div class="sl-top">
+                <span class="sl-lbl">Total 6 mois</span>
+                <span class="sl-val" id="cv-ete">1 500 kWh</span>
+              </div>
+              <input type="range" id="csl-ete" min="500" max="8000" step="100" value="1500" oninput="uSem('ete',this.value)">
+              <div class="sl-hints"><span>500</span><span>8 000 kWh</span></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.75rem;color:#00D4FF;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">❄️ Automne / Hiver</div>
+            <div style="font-size:.72rem;color:#6B82A0;margin-bottom:8px">Octobre → Mars</div>
+            <div class="sl-wrap" style="margin:8px 0">
+              <div class="sl-top">
+                <span class="sl-lbl">Total 6 mois</span>
+                <span class="sl-val" id="cv-hiver">3 500 kWh</span>
+              </div>
+              <input type="range" id="csl-hiver" min="500" max="12000" step="100" value="3500" oninput="uSem('hiver',this.value)">
+              <div class="sl-hints"><span>500</span><span>12 000 kWh</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:12px;text-align:center;margin-top:12px">
+          <span style="font-size:.78rem;color:#6B82A0">Total annuel estimé : </span>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;color:#F5A623" id="cv-total-sem">5 000 kWh</span>
+        </div>
+      </div>
+
+      <!-- MÉTHODE 3 — Mensuel -->
+      <div id="m-mensuel" style="display:none">
+        <div style="font-size:.78rem;color:#6B82A0;margin-bottom:12px">Saisissez votre consommation pour chaque mois (en kWh) :</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="monthly-inputs"></div>
+        <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:10px;padding:12px;text-align:center;margin-top:12px">
+          <span style="font-size:.78rem;color:#6B82A0">Total annuel : </span>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;color:#F5A623" id="cv-total-men">0 kWh</span>
+        </div>
+      </div>
+
+      <!-- Tarif -->
+      <div class="opts row" style="margin-top:20px">
+        <div class="opt" onclick="ch(this,'tarif','0.22')">
+          <div><div class="opt-txt">0,22 € / kWh</div><div class="opt-sub">Offre marché</div></div>
+        </div>
+        <div class="opt sel" onclick="ch(this,'tarif','0.2276')">
+          <div><div class="opt-txt">0,2276 € / kWh</div><div class="opt-sub">Tarif réglementé</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'tarif','0.25')">
+          <div><div class="opt-txt">0,25 € / kWh</div><div class="opt-sub">HP/HC majoré</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(1)">←</button>
+      <button class="btn-next" onclick="go(3)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="panel" id="p3">
+    <div class="card">
+      <div class="card-title">🏠 Votre toiture</div>
+      <div class="card-sub">L'orientation et la surface disponible déterminent la puissance de votre installation.</div>
+
+      <div class="opts row">
+        <div class="opt" onclick="ch(this,'orient','SO')">
+          <span class="opt-icon">↙️</span>
+          <div><div class="opt-txt">Sud-Ouest</div><div class="opt-sub">–5%</div></div>
+        </div>
+        <div class="opt sel" onclick="ch(this,'orient','S')">
+          <span class="opt-icon">☀️</span>
+          <div><div class="opt-txt">Plein Sud</div><div class="opt-sub">Optimal</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'orient','SE')">
+          <span class="opt-icon">↘️</span>
+          <div><div class="opt-txt">Sud-Est</div><div class="opt-sub">–8%</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'orient','E')">
+          <span class="opt-icon">→</span>
+          <div><div class="opt-txt">Est</div><div class="opt-sub">–20%</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'orient','O')">
+          <span class="opt-icon">←</span>
+          <div><div class="opt-txt">Ouest</div><div class="opt-sub">–20%</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'orient','NS')">
+          <span class="opt-icon">↕️</span>
+          <div><div class="opt-txt">Est + Ouest</div></div>
+        </div>
+      </div>
+
+      <div class="opts" style="margin-top:8px">
+        <div class="opt" onclick="ch(this,'surf','small')">
+          <span class="opt-icon">📐</span>
+          <div><div class="opt-txt">Petite surface — moins de 15 m²</div><div class="opt-sub">3 kWc environ</div></div>
+        </div>
+        <div class="opt sel" onclick="ch(this,'surf','med')">
+          <span class="opt-icon">📏</span>
+          <div><div class="opt-txt">Surface moyenne — 15 à 30 m²</div><div class="opt-sub">5 à 6 kWc</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'surf','large')">
+          <span class="opt-icon">🔲</span>
+          <div><div class="opt-txt">Grande surface — plus de 30 m²</div><div class="opt-sub">9 kWc et plus</div></div>
+        </div>
+      </div>
+
+      <div class="opts row" style="margin-top:8px">
+        <div class="opt sel" onclick="ch(this,'ombre','non')">
+          <div><div class="opt-txt">✅ Pas d'ombrage</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'ombre','peu')">
+          <div><div class="opt-txt">⚠️ Ombrage léger</div><div class="opt-sub">Cheminée, arbre</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'ombre','fort')">
+          <div><div class="opt-txt">🚫 Ombrage important</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(2)">←</button>
+      <button class="btn-next" onclick="go(4)">Continuer →</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="panel" id="p4">
+    <div class="card">
+      <div class="card-title">🔌 Vos équipements</div>
+      <div class="card-sub">Ces équipements permettent de mieux valoriser votre production solaire.</div>
+
+      <div class="opts">
+        <div class="opt sel" onclick="ch(this,'ve','non')">
+          <span class="opt-icon">🚗</span>
+          <div><div class="opt-txt">Pas de véhicule électrique</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'ve','peu')">
+          <span class="opt-icon">🔌</span>
+          <div><div class="opt-txt">Véhicule électrique — 1 à 2 jours/semaine</div><div class="opt-sub">Recharge occasionnelle en journée</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'ve','moy')">
+          <span class="opt-icon">⚡</span>
+          <div><div class="opt-txt">Véhicule électrique — 3 à 4 jours/semaine</div><div class="opt-sub">Recharge régulière en journée</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'ve','freq')">
+          <span class="opt-icon">🚀</span>
+          <div><div class="opt-txt">Véhicule électrique — tous les jours</div><div class="opt-sub">Recharge quotidienne en journée</div></div>
+        </div>
+      </div>
+
+      <div class="multi-info" style="margin-top:16px">Sélectionnez tout ce qui s'applique :</div>
+      <div class="opts row">
+        <div class="opt" onclick="tog(this,'clim')">
+          <span class="opt-icon">❄️</span>
+          <div><div class="opt-txt">Climatisation</div></div>
+        </div>
+        <div class="opt" onclick="tog(this,'piscine')">
+          <span class="opt-icon">🏊</span>
+          <div><div class="opt-txt">Piscine</div></div>
+        </div>
+        <div class="opt" onclick="tog(this,'cumulus')">
+          <span class="opt-icon">🚿</span>
+          <div><div class="opt-txt">Chauffe-eau électrique</div></div>
+        </div>
+        <div class="opt" onclick="tog(this,'seche')">
+          <span class="opt-icon">👕</span>
+          <div><div class="opt-txt">Sèche-linge</div></div>
+        </div>
+      </div>
+
+      <div class="opts row" style="margin-top:8px">
+        <div class="opt" onclick="ch(this,'presence','rare')">
+          <div><div class="opt-txt">Absent en journée</div><div class="opt-sub">Travail hors domicile</div></div>
+        </div>
+        <div class="opt sel" onclick="ch(this,'presence','partiel')">
+          <div><div class="opt-txt">Parfois présent</div><div class="opt-sub">Télétravail partiel</div></div>
+        </div>
+        <div class="opt" onclick="ch(this,'presence','souvent')">
+          <div><div class="opt-txt">Souvent présent</div><div class="opt-sub">Retraite / domicile</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="go(3)">←</button>
+      <button class="btn-next" onclick="calcul();go(5)">Voir mes résultats ☀️</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 5 — RÉSULTATS -->
+  <div class="panel" id="p5">
+
+    <div class="res-hero">
+      <div class="res-title">Installation recommandée pour votre profil</div>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="kpi-val" id="r-kwc">—</div>
+          <div class="kpi-lbl">kWc installés</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-val" id="r-prod">—</div>
+          <div class="kpi-lbl">kWh / an</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-val" id="r-gain">—</div>
+          <div class="kpi-lbl">€ gagnés / an</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">📊 Scénarios selon votre usage</div>
+      <div class="sc-wrap">
+        <table id="sc-table"></table>
+      </div>
+      <div class="note">Hypothèse hausse tarif EDF <strong>+4%/an</strong> · Revente surplus 4 cts/kWh · Zone Grand Est 1 500 kWh/m²/an</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">💶 Détail financier</div>
+      <table class="detail-table" id="r-detail"></table>
+    </div>
+
+    <div class="cta">
+      <div class="cta-title">🎯 Étude gratuite & visite offerte</div>
+      <div class="cta-sub">Cette simulation est une estimation. Notre équipe RGE se déplace gratuitement pour une étude complète avec devis sans engagement.</div>
+
+      <div class="field">
+        <label>Votre nom</label>
+        <input type="text" id="l-nom" placeholder="Jean Dupont">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Téléphone</label>
+          <input type="tel" id="l-tel" placeholder="06 xx xx xx xx">
+        </div>
+        <div class="field">
+          <label>Code postal</label>
+          <input type="text" id="l-cp" placeholder="57xxx">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email (optionnel)</label>
+        <input type="email" id="l-email" placeholder="email@exemple.fr">
+      </div>
+
+      <button class="btn-cta" onclick="submit()">📞 Demander mon étude gratuite</button>
+
+      <div class="contacts">
+        <a class="contact-link" href="tel:+33699479944">📞 06 99 47 99 44</a>
+        <a class="contact-link" href="/cdn-cgi/l/email-protection#44272b2a30252730042536302d37252a3721272b282b232d353121376a2236">✉️ <span class="__cf_email__" data-cfemail="52313d3c26333126123320263b21333c2137313d3e3d353b232737217c3420">[email&#160;protected]</span></a>
+        <span style="font-size:.78rem;color:#6B82A0">📍 Thionville · Moselle · 57</span>
+      </div>
+    </div>
+
+    <div class="nav" style="margin-top:8px">
+      <button class="btn-back" onclick="go(4)">← Modifier</button>
+      <button class="btn-next" onclick="go(1)">🔄 Nouvelle simulation</button>
+    </div>
+
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// STATE
+var D={
+  chauf:'elec',occ:'34',
+  meth:'annuel', // annuel / semestre / mensuel
+  conso:5000,
+  consoEte:1500, consoHiver:3500,
+  consoMensuel:[900,800,650,450,350,280,260,290,400,550,750,850],
+  tarif:0.2276,
+  orient:'S',surf:'med',ombre:'non',
+  ve:'non',clim:false,piscine:false,cumulus:false,seche:false,
+  presence:'partiel'
+};
+
+var MOIS=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+// Profil mensuel type (ratio) pour répartition automatique
+var PROFIL_HIVER=[.13,.12,.10,.07,.05,.04,.04,.04,.06,.08,.12,.11]; // chauffage élec
+var PROFIL_ETE  =[.06,.06,.07,.08,.10,.12,.13,.12,.10,.08,.05,.06]; // profil moyen
+
+var cur=1;
+
+// INIT grille mensuelle
+function initMonthly(){
+  var g=document.getElementById('monthly-inputs');
+  if(!g)return;
+  var html='';
+  for(var i=0;i<12;i++){
+    html+='<div style="text-align:center">'+
+      '<div style="font-size:.65rem;color:#6B82A0;margin-bottom:4px;font-weight:600">'+MOIS[i]+'</div>'+
+      '<input type="number" id="m'+i+'" value="'+D.consoMensuel[i]+'" min="0" max="3000" '+
+      'style="width:100%;padding:8px 4px;border-radius:8px;border:1.5px solid #1F2D45;'+
+      'background:rgba(255,255,255,.03);color:#F0F4FF;font-size:14px;text-align:center;outline:none" '+
+      'oninput="updMonthly()">'+
+      '</div>';
+  }
+  g.innerHTML=html;
+}
+
+function updMonthly(){
+  var total=0;
+  for(var i=0;i<12;i++){
+    var el=document.getElementById('m'+i);
+    var v=parseInt(el?el.value:0)||0;
+    D.consoMensuel[i]=v;
+    total+=v;
+  }
+  D.conso=total;
+  var el2=document.getElementById('cv-total-men');
+  if(el2) el2.textContent=new Intl.NumberFormat('fr-FR').format(total)+' kWh';
+}
+
+// MÉTHODE SAISIE
+function setMeth(el,meth){
+  var opts=el.parentElement.querySelectorAll('.opt');
+  for(var i=0;i<opts.length;i++) opts[i].classList.remove('sel');
+  el.classList.add('sel');
+  D.meth=meth;
+  document.getElementById('m-annuel').style.display=meth==='annuel'?'block':'none';
+  document.getElementById('m-semestre').style.display=meth==='semestre'?'block':'none';
+  document.getElementById('m-mensuel').style.display=meth==='mensuel'?'block':'none';
+  if(meth==='mensuel') initMonthly();
+}
+
+// SLIDER ANNUEL
+function uC(v){
+  D.conso=parseInt(v);
+  var el=document.getElementById('cv');
+  if(el) el.textContent=new Intl.NumberFormat('fr-FR').format(v)+' kWh';
+  // Répartir sur profil type
+  for(var i=0;i<12;i++) D.consoMensuel[i]=Math.round(D.conso*PROFIL_HIVER[i]);
+}
+function sC(v){
+  var sl=document.getElementById('csl');
+  if(sl) sl.value=v;
+  uC(v);
+  var btns=document.querySelectorAll('.qbtn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('sel');
+}
+
+// SLIDERS SEMESTRE
+function uSem(saison,v){
+  v=parseInt(v);
+  if(saison==='ete'){
+    D.consoEte=v;
+    var el=document.getElementById('cv-ete');
+    if(el) el.textContent=new Intl.NumberFormat('fr-FR').format(v)+' kWh';
+    // Répartir sur avr-sep
+    var moisEte=[3,4,5,6,7,8]; // indices avril→septembre
+    for(var i=0;i<6;i++) D.consoMensuel[moisEte[i]]=Math.round(v/6);
+  }else{
+    D.consoHiver=v;
+    var el2=document.getElementById('cv-hiver');
+    if(el2) el2.textContent=new Intl.NumberFormat('fr-FR').format(v)+' kWh';
+    // Répartir sur oct-mar (avec pondération chauffage)
+    var moisHiver=[9,10,11,0,1,2]; // oct→mar
+    var poidsHiver=[.13,.18,.20,.22,.17,.10];
+    for(var j=0;j<6;j++) D.consoMensuel[moisHiver[j]]=Math.round(v*poidsHiver[j]);
+  }
+  D.conso=D.consoEte+D.consoHiver;
+  var el3=document.getElementById('cv-total-sem');
+  if(el3) el3.textContent=new Intl.NumberFormat('fr-FR').format(D.conso)+' kWh';
+}
+
+// NAVIGATION
+function go(n){
+  document.getElementById('p'+cur).classList.remove('active');
+  document.getElementById('p'+n).classList.add('active');
+  cur=n;
+  updProg(n);
+  window.scrollTo(0,0);
+}
+
+function updProg(n){
+  var pcts=[0,20,40,60,80,100];
+  document.getElementById('prog').style.width=pcts[n]+'%';
+  var lbls=['Logement','Conso','Toiture','Équipements','Résultats'];
+  for(var i=1;i<=5;i++){
+    var el=document.getElementById('ps'+i);
+    el.className='prog-step'+(i<n?' done':i===n?' active':'');
+  }
+}
+
+// SÉLECTION UNIQUE
+function ch(el,key,val){
+  var siblings=el.parentElement.querySelectorAll('.opt');
+  for(var i=0;i<siblings.length;i++) siblings[i].classList.remove('sel');
+  el.classList.add('sel');
+  D[key]=val;
+}
+
+// SÉLECTION MULTIPLE
+function tog(el,key){
+  el.classList.toggle('sel');
+  D[key]=el.classList.contains('sel');
+}
+
+// SLIDER CONSO
+function uC(v){
+  D.conso=parseInt(v);
+  document.getElementById('cv').textContent=new Intl.NumberFormat('fr-FR').format(v)+' kWh';
+}
+function sC(v){
+  document.getElementById('csl').value=v;
+  uC(v);
+  var btns=document.querySelectorAll('.qbtn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.remove('sel');
+}
+
+// FORMATAGE
+function f(n){return new Intl.NumberFormat('fr-FR').format(Math.round(n));}
+
+// CALCUL ROI
+function roi(gain,invest){
+  var c=0;
+  for(var an=1;an<=35;an++){
+    c+=gain*Math.pow(1.04,an-1);
+    if(c>=invest) return an;
+  }
+  return 0;
+}
+
+// CALCUL PRINCIPAL
+function calcul(){
+  try{
+    var IRR=1500, PR=0.78;
+    var tarif=parseFloat(D.tarif)||0.2276;
+    var HAUSSE=0.04;
+
+    // Puissance
+    var kwcMap={small:3,med:6,large:9};
+    var kwc=kwcMap[D.surf]||6;
+    if(D.conso>12000&&D.surf==='large') kwc=9;
+    if(D.conso<4000&&D.surf==='med') kwc=3;
+
+    // Orientation
+    var azF={S:1,SE:0.92,SO:0.95,E:0.80,O:0.80,NS:0.88};
+    var az=azF[D.orient]||1;
+
+    // Ombrage
+    var omF={non:1,peu:0.92,fort:0.80};
+    var om=omF[D.ombre]||1;
+
+    // Production annuelle
+    var prod=Math.round(kwc*IRR*PR*az*om);
+
+    // Répartition mensuelle production (ratio solaire)
+    var MR=[.04,.055,.085,.10,.115,.125,.13,.12,.10,.075,.045,.03];
+
+    // Autoconsommation MENSUELLE avec données réelles
+    // Facteurs de coïncidence selon profil
+    var veB={non:0,peu:0.05,moy:0.10,freq:0.15};
+    var veBonus=veB[D.ve]||0;
+
+    var COINC=[0.85,0.82,0.72,0.60,0.48,0.40,0.38,0.40,0.52,0.65,0.80,0.84];
+    // Bonus équipements
+    if(D.clim){COINC[4]+=.06;COINC[5]+=.08;COINC[6]+=.10;COINC[7]+=.08;COINC[8]+=.06;}
+    if(D.piscine){COINC[4]+=.05;COINC[5]+=.07;COINC[6]+=.08;COINC[7]+=.07;COINC[8]+=.05;}
+    if(D.cumulus){for(var k=0;k<12;k++) COINC[k]+=.03;}
+    if(D.presence==='souvent'){for(var k=0;k<12;k++) COINC[k]+=.06;}
+    if(D.presence==='partiel'){for(var k=0;k<12;k++) COINC[k]+=.03;}
+    // VE boost été
+    if(veBonus>0){COINC[3]+=veBonus;COINC[4]+=veBonus;COINC[5]+=veBonus;COINC[6]+=veBonus;COINC[7]+=veBonus;COINC[8]+=veBonus;}
+
+    var autoTotal=0, surpTotal=0;
+    for(var i=0;i<12;i++){
+      var prodM=prod*MR[i];
+      var consoM=D.consoMensuel[i];
+      var coinc=Math.min(0.92,COINC[i]);
+      var prodUtile=prodM*coinc;
+      var autoM=Math.min(prodUtile,consoM);
+      autoTotal+=autoM;
+      surpTotal+=Math.max(0,prodM-autoM);
+    }
+
+    var tauto=Math.round(autoTotal/Math.max(prod,1)*100);
+    var eco=Math.round(autoTotal*tarif);
+    var rev=Math.round(surpTotal*0.04);
+    var gain=eco+rev;
+
+    // Investissement
+    var estim={small:7500,med:11900,large:15300};
+    var invest=estim[D.surf]||11900;
+    var prime=Math.round(kwc*80);
+    var net=invest-prime;
+
+    // KPIs
+    document.getElementById('r-kwc').textContent=kwc.toFixed(1);
+    document.getElementById('r-prod').textContent=f(prod);
+    document.getElementById('r-gain').textContent=f(gain);
+
+    // Scénarios ±10%
+    var sc=[
+      {lbl:'Prudent',em:'🔵',pct:Math.max(25,tauto-10)},
+      {lbl:'Réaliste',em:'✅',pct:tauto,main:true},
+      {lbl:'Optimiste',em:'🟢',pct:Math.min(75,tauto+10)},
+    ];
+    var tbl='<tr><th>Scénario</th><th>Autoconso</th><th>Gain/an</th><th>ROI +4%/an</th></tr>';
+    for(var i=0;i<sc.length;i++){
+      var s=sc[i];
+      var a2=prod*(s.pct/100), su2=prod-a2;
+      var g2=Math.round(a2*tarif)+Math.round(su2*0.04);
+      var r2=roi(g2,net);
+      tbl+='<tr'+(s.main?' class="main"':'')+'>'+
+        '<td>'+s.em+' '+s.lbl+'</td>'+
+        '<td>'+s.pct+'%</td>'+
+        '<td class="gain">'+f(g2)+' €</td>'+
+        '<td class="roi">'+(r2>0?r2+' ans':'> 35 ans')+'</td>'+
+      '</tr>';
+    }
+    document.getElementById('sc-table').innerHTML=tbl;
+
+    // Détail
+    var det='<tr class="hd"><td colspan="2">Investissement</td></tr>'+
+      '<tr><td>Installation clé en main TTC (TVA 5,5%)</td><td>'+f(invest)+' €</td></tr>'+
+      '<tr><td>Prime EDF OA (80 €/kWc)</td><td style="color:#22C55E">− '+f(prime)+' €</td></tr>'+
+      '<tr><td><strong>Net après prime</strong></td><td><strong>'+f(net)+' €</strong></td></tr>'+
+      '<tr class="hd"><td colspan="2">Gains annuels — scénario réaliste ('+tauto+'% autoconso)</td></tr>'+
+      '<tr><td>Économies sur facture EDF</td><td>'+f(eco)+' €/an</td></tr>'+
+      '<tr><td>Revente surplus EDF OA</td><td>'+f(rev)+' €/an</td></tr>'+
+      '<tr><td><strong>Gain total annuel</strong></td><td><strong style="color:#22C55E">'+f(gain)+' €/an</strong></td></tr>';
+    document.getElementById('r-detail').innerHTML=det;
+
+  }catch(e){
+    document.getElementById('sc-table').innerHTML='<tr><td colspan="4">Erreur : '+e.message+'</td></tr>';
+  }
+}
+
+// SOUMISSION
+function submit(){
+  var nom=document.getElementById('l-nom').value.trim();
+  var tel=document.getElementById('l-tel').value.trim();
+  if(!nom||!tel){alert('Merci de renseigner votre nom et téléphone.');return;}
+  document.querySelector('.cta').innerHTML=
+    '<div class="confirm">'+
+    '<div class="confirm-icon">✅</div>'+
+    '<div class="confirm-title">Merci '+nom+' !</div>'+
+    '<div class="confirm-sub">Notre équipe vou
