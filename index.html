@@ -18,6 +18,55 @@ body{background:#0B1120;color:#F0F4FF;font-family:'DM Sans',sans-serif;font-size
 h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:10px;color:#fff}
 h1 em{color:#F5A623;font-style:normal}
 .hs{color:#6B82A0;font-size:.88rem;line-height:1.5}
+
+/* ── Bouton analyse adresse ── */
+.ana-btn{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 20px 16px;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(245,166,35,.4);background:rgba(245,166,35,.07);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.88rem;color:#FFD580;font-weight:600;transition:all .2s;width:calc(100% - 40px)}
+.ana-btn:hover,.ana-btn:active{background:rgba(245,166,35,.15);border-color:#F5A623}
+.ana-btn span{font-size:.72rem;color:#6B82A0;font-weight:400}
+
+/* ── Modal overlay ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;overflow-y:auto;padding:16px}
+.modal-bg.open{display:block}
+.modal{background:#0B1120;border:1px solid #1F2D45;border-radius:16px;max-width:480px;margin:0 auto;overflow:hidden}
+.modal-hdr{background:#111827;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1F2D45}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#fff}
+.modal-close{background:transparent;border:1px solid #1F2D45;border-radius:8px;color:#6B82A0;font-size:1.1rem;cursor:pointer;padding:4px 10px;line-height:1}
+.modal-body{padding:18px}
+.ana-lbl{font-size:.68rem;color:#6B82A0;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block}
+.ana-row{display:flex;gap:8px;margin-bottom:6px}
+.ana-input{flex:1;padding:13px 14px;border-radius:9px;border:1.5px solid #1F2D45;background:rgba(255,255,255,.03);color:#F0F4FF;font-size:15px;outline:none;font-family:'DM Sans',sans-serif}
+.ana-input:focus{border-color:#F5A623}
+.ana-go{background:#F5A623;border:none;border-radius:9px;padding:13px 18px;color:#000;font-size:1.1rem;font-weight:800;cursor:pointer;min-width:52px}
+.ana-go:disabled{background:#334155;color:#64748b;cursor:not-allowed}
+.ana-status{font-size:.78rem;min-height:20px;margin-bottom:10px}
+.ana-status.ok{color:#22C55E}
+.ana-status.err{color:#ef4444}
+.ana-status.loading{color:#F5A623}
+
+.ori-result{background:#111827;border-radius:12px;padding:18px;text-align:center;margin:12px 0;border:1px solid #1F2D45}
+.ori-result.good{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.06)}
+.ori-result.mid{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.06)}
+.ori-result.bad{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.06)}
+.ori-icon{font-size:2.8rem;margin-bottom:6px}
+.ori-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:4px}
+.ori-az{font-size:.78rem;color:#6B82A0}
+.ori-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.ori-stat{background:rgba(0,0,0,.3);border-radius:9px;padding:10px 6px;text-align:center}
+.ori-sv{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:#F5A623}
+.ori-sl{font-size:.58rem;color:#6B82A0;margin-top:3px;text-transform:uppercase;letter-spacing:.3px}
+.use-btn{width:100%;padding:14px;border-radius:10px;border:none;background:linear-gradient(135deg,#F5A623,#E8940A);color:#000;font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer;margin-bottom:8px}
+.manual-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}
+.m-btn{padding:11px 4px;border-radius:9px;background:rgba(255,255,255,.03);border:1.5px solid #1F2D45;cursor:pointer;text-align:center;font-weight:700;font-size:.8rem;font-family:'DM Sans',sans-serif;color:#F0F4FF;transition:all .15s}
+.m-btn.good{color:#22C55E;border-color:rgba(34,197,94,.3)}
+.m-btn.mid{color:#F5A623;border-color:rgba(245,166,35,.3)}
+.m-btn.bad{color:#ef4444;border-color:rgba(239,68,68,.3)}
+.m-btn.sel{color:#000!important;font-weight:800}
+.m-btn.sel.good{background:#22C55E;border-color:#22C55E}
+.m-btn.sel.mid{background:#F5A623;border-color:#F5A623}
+.m-btn.sel.bad{background:#ef4444;border-color:#ef4444}
+.edit-link{background:transparent;border:1px solid #1F2D45;border-radius:8px;padding:8px 14px;color:#6B82A0;font-size:.75rem;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;margin-bottom:8px}
+
+/* ── Existant ── */
 .pg{padding:0 20px;margin-bottom:4px}
 .pgb{height:4px;background:#1F2D45;border-radius:2px;overflow:hidden}
 .pgf{height:100%;background:linear-gradient(90deg,#F5A623,#00D4FF);border-radius:2px;transition:width .4s}
@@ -106,6 +155,12 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
   <p class="hs">5 questions · Résultat immédiat · Sans engagement</p>
 </div>
 
+<!-- Bouton analyse adresse -->
+<button class="ana-btn" onclick="openModal()">
+  🧭 Analyser l'orientation d'une adresse
+  <span>→ Détection automatique via OpenStreetMap</span>
+</button>
+
 <div class="pg">
   <div class="pgb"><div class="pgf" id="pgf" style="width:20%"></div></div>
   <div class="pgl">
@@ -152,7 +207,6 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
       <button class="b" onclick="ch('gm','meth','mensuel',this);showMeth('mensuel')">📱 J'ai mes 12 mois Linky<small>Appli Enedis ou espace client</small></button>
     </div>
   </div>
-
   <div class="c" id="ma">
     <div class="sr"><span class="sl">Consommation annuelle</span><span class="sv" id="cv">5 000 kWh</span></div>
     <input type="range" id="csl" min="2000" max="20000" step="500" value="5000" oninput="D.conso=parseInt(this.value);document.getElementById('cv').textContent=fmn(D.conso)+' kWh';rAn(D.conso)">
@@ -164,7 +218,6 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
       <button class="qb" onclick="sC(this,12000)">12 000<br><small>Très grande</small></button>
     </div>
   </div>
-
   <div class="c" id="ms" style="display:none">
     <div class="sg">
       <div class="sb">
@@ -174,19 +227,17 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
       </div>
       <div class="sb">
         <div class="st" style="color:#00D4FF">❄️ Hiver — Oct à Mar</div>
-        <div class="sr"><span class="sl">6 mois</span><span class="sv" id="ch">3 500 kWh</span></div>
-        <input type="range" id="csh" min="500" max="12000" step="100" value="3500" oninput="D.consoHiver=parseInt(this.value);document.getElementById('ch').textContent=fmn(D.consoHiver)+' kWh';rSem()">
+        <div class="sr"><span class="sl">6 mois</span><span class="sv" id="ch2">3 500 kWh</span></div>
+        <input type="range" id="csh" min="500" max="12000" step="100" value="3500" oninput="D.consoHiver=parseInt(this.value);document.getElementById('ch2').textContent=fmn(D.consoHiver)+' kWh';rSem()">
       </div>
     </div>
     <div class="tb">Total annuel estimé : <strong id="st">5 000 kWh</strong></div>
   </div>
-
   <div class="c" id="mm" style="display:none">
     <div style="font-size:.78rem;color:#6B82A0;margin-bottom:4px">Saisissez votre consommation mois par mois (kWh) :</div>
     <div class="mg" id="mgr"></div>
     <div class="tb">Total annuel : <strong id="mt">0 kWh</strong></div>
   </div>
-
   <div class="c">
     <span class="lb">Tarif de votre kWh</span>
     <div class="g r" id="gt">
@@ -207,6 +258,9 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
     <div class="ct">🏠 Votre toiture</div>
     <div class="cs">L'orientation et la surface disponible déterminent la puissance installable.</div>
     <span class="lb">Orientation</span>
+    <div id="ori-detected-banner" style="display:none;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:9px;padding:10px 14px;margin-bottom:10px;font-size:.78rem;color:#4ADE80">
+      ✓ Orientation détectée automatiquement — <button onclick="openModal()" style="background:none;border:none;color:#F5A623;cursor:pointer;font-size:.78rem;text-decoration:underline">modifier</button>
+    </div>
     <div class="g r" id="gor">
       <button class="b" onclick="ch('gor','orient','SO',this)">↙️ Sud-Ouest<small>–5%</small></button>
       <button class="b on" onclick="ch('gor','orient','S',this)">☀️ Plein Sud<small>Optimal</small></button>
@@ -309,9 +363,55 @@ tr.m td{background:rgba(34,197,94,.06);font-weight:600}
   </div>
 </div>
 
+</div><!-- .w -->
+
+<!-- ══════════════════════════════════════════════
+     MODAL ANALYSE ADRESSE
+══════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">🧭 Analyse d'orientation</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <span class="ana-lbl">Adresse du client</span>
+      <div class="ana-row">
+        <input class="ana-input" type="text" id="anaInput" placeholder="8 rue de la Platinerie, 57700 Hayange" onkeydown="if(event.key==='Enter')analyzeAddr()"/>
+        <button class="ana-go" id="anaBtn" onclick="analyzeAddr()">→</button>
+      </div>
+      <div class="ana-status" id="anaStatus"></div>
+
+      <!-- Résultat auto -->
+      <div id="oriResultWrap" style="display:none">
+        <div class="ori-result" id="oriResult">
+          <div class="ori-icon" id="oriResIcon"></div>
+          <div class="ori-name" id="oriResName"></div>
+          <div class="ori-az" id="oriResAz"></div>
+          <div class="ori-stats">
+            <div class="ori-stat"><div class="ori-sv" id="oriResProd">–</div><div class="ori-sl">kWh estimés<br>/ kWc / an</div></div>
+            <div class="ori-stat"><div class="ori-sv" id="oriResH">–</div><div class="ori-sl">Heures<br>équiv.</div></div>
+            <div class="ori-stat"><div class="ori-sv" id="oriResPct">–</div><div class="ori-sl">% vs<br>Plein Sud</div></div>
+          </div>
+        </div>
+        <button class="use-btn" onclick="useOrientation()">✅ Utiliser cette orientation dans le simulateur</button>
+        <button class="edit-link" onclick="showManualGrid()">✏ Modifier manuellement</button>
+      </div>
+
+      <!-- Grille manuelle -->
+      <div id="manualWrap" style="display:none">
+        <span class="ana-lbl">Sélectionner l'orientation</span>
+        <div class="manual-grid" id="manualGrid"></div>
+        <button class="use-btn" id="manualUseBtn" style="display:none" onclick="useOrientation()">✅ Utiliser cette orientation</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <script>
+// ── Données simulateur ────────────────────────────────────────────────────────
 var D={chauf:'elec',occ:'34',meth:'annuel',conso:5000,consoEte:1500,consoHiver:3500,
   consoM:[900,800,650,450,350,280,260,290,400,550,750,850],
   tarif:0.2276,orient:'S',surf:'s5',ombre:'non',
@@ -341,16 +441,11 @@ function ch(gid,key,val,btn){
   D[key]=val;
 }
 
-function tog(btn,key){
-  btn.classList.toggle('on');
-  D[key]=btn.classList.contains('on');
-}
+function tog(btn,key){btn.classList.toggle('on');D[key]=btn.classList.contains('on');}
 
 function sC(btn,v){
-  document.getElementById('csl').value=v;
-  D.conso=v;
-  document.getElementById('cv').textContent=fmn(v)+' kWh';
-  rAn(v);
+  document.getElementById('csl').value=v;D.conso=v;
+  document.getElementById('cv').textContent=fmn(v)+' kWh';rAn(v);
   var bs=document.querySelectorAll('.qb');
   for(var i=0;i<bs.length;i++) bs[i].classList.remove('on');
   btn.classList.add('on');
@@ -372,8 +467,7 @@ function buildMgr(){
 function updM(idx,v){
   D.consoM[idx]=parseInt(v)||0;
   var t=0;for(var k=0;k<12;k++) t+=D.consoM[k];
-  D.conso=t;
-  document.getElementById('mt').textContent=fmn(t)+' kWh';
+  D.conso=t;document.getElementById('mt').textContent=fmn(t)+' kWh';
 }
 
 function rAn(v){
@@ -426,11 +520,9 @@ function calcul(){
     var eco=Math.round(aT*tarif),rev=Math.round(sT*0.04),gain=eco+rev;
     var inv={s3:8000,s4:9250,s5:10500,s6:11900,s9:15300}[D.surf]||10500;
     var prime=Math.round(kwc*80),net=inv-prime;
-
     document.getElementById('rkw').textContent=kwc.toFixed(1);
     document.getElementById('rpd').textContent=fmn(prod);
     document.getElementById('rgn').textContent=fmn(gain);
-
     var sc=[{l:'🔵 Prudent',p:Math.max(25,ta-10)},{l:'✅ Réaliste',p:ta,m:true},{l:'🟢 Optimiste',p:Math.min(75,ta+10)}];
     var tbl='<tr><th>Scénario</th><th>Autoconso</th><th>Gain/an</th><th>ROI +4%/an</th></tr>';
     for(var k=0;k<sc.length;k++){
@@ -471,6 +563,169 @@ function submit(){
 }
 
 rAn(5000);
+
+// ══════════════════════════════════════════════
+// OUTIL ANALYSE ADRESSE
+// ══════════════════════════════════════════════
+
+var ANA = {
+  az: null,
+  oriKey: null,
+  DIRS: [
+    {label:'N',  az:0,   cls:'bad',  icon:'❌'},
+    {label:'NE', az:45,  cls:'bad',  icon:'❌'},
+    {label:'E',  az:90,  cls:'mid',  icon:'⚠️'},
+    {label:'SE', az:135, cls:'good', icon:'✅'},
+    {label:'S',  az:180, cls:'good', icon:'✅'},
+    {label:'SO', az:225, cls:'good', icon:'✅'},
+    {label:'O',  az:270, cls:'mid',  icon:'⚠️'},
+    {label:'NO', az:315, cls:'bad',  icon:'❌'},
+  ]
+};
+
+function azToSimKey(az){
+  var dev=Math.min(Math.abs(az-180),360-Math.abs(az-180));
+  if(dev<=22) return 'S';
+  var f1=Math.min(Math.abs(az-135),360-Math.abs(az-135));
+  var f2=Math.min(Math.abs(az-225),360-Math.abs(az-225));
+  var f3=Math.min(Math.abs(az-90),360-Math.abs(az-90));
+  var f4=Math.min(Math.abs(az-270),360-Math.abs(az-270));
+  if(f1<f2&&f1<f3&&f1<f4) return 'SE';
+  if(f2<f1&&f2<f3&&f2<f4) return 'SO';
+  if(f3<f4) return 'E';
+  return 'O';
+}
+
+function azCorr(az){
+  var dev=Math.min(Math.abs(az-180),360-Math.abs(az-180));
+  if(dev<=15) return 1.00;
+  if(dev<=30) return 0.97;
+  if(dev<=45) return 0.93;
+  if(dev<=60) return 0.88;
+  if(dev<=90) return 0.74;
+  if(dev<=120) return 0.55;
+  if(dev<=150) return 0.38;
+  return 0.26;
+}
+
+function getDir(az){
+  return ANA.DIRS.reduce(function(a,b){
+    var da=Math.min(Math.abs(az-a.az),360-Math.abs(az-a.az));
+    var db=Math.min(Math.abs(az-b.az),360-Math.abs(az-b.az));
+    return da<db?a:b;
+  });
+}
+
+function setAnaStatus(type,txt){
+  var el=document.getElementById('anaStatus');
+  el.textContent=txt; el.className='ana-status '+type;
+}
+
+function openModal(){
+  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('anaInput').focus();
+}
+
+function closeModal(){document.getElementById('modalBg').classList.remove('open');}
+
+function closeModalBg(e){if(e.target===document.getElementById('modalBg'))closeModal();}
+
+async function analyzeAddr(){
+  var addr=document.getElementById('anaInput').value.trim();
+  if(!addr) return;
+  document.getElementById('anaBtn').disabled=true;
+  document.getElementById('oriResultWrap').style.display='none';
+  document.getElementById('manualWrap').style.display='none';
+  setAnaStatus('loading','🔍 Géocodage...');
+  try{
+    var gr=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(addr)+'&format=json&limit=1&countrycodes=fr',{headers:{'Accept-Language':'fr'}});
+    var gd=await gr.json();
+    if(!gd.length) throw new Error('Adresse introuvable');
+    var lat=parseFloat(gd[0].lat), lon=parseFloat(gd[0].lon);
+    setAnaStatus('loading','🔍 Détection du bâtiment via OpenStreetMap...');
+    var query='[out:json];way(around:40,'+lat+','+lon+')[building];out geom;';
+    var or=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(query)});
+    var od=await or.json();
+    if(!od.elements||!od.elements.length) throw new Error('Bâtiment introuvable dans OSM — sélection manuelle');
+    var nodes=od.elements[0].geometry;
+    var maxLen=0,mainB=0;
+    for(var i=0;i<nodes.length-1;i++){
+      var a=nodes[i],b=nodes[i+1];
+      var dlat=(b.lat-a.lat)*111000;
+      var dlon=(b.lon-a.lon)*111000*Math.cos(a.lat*Math.PI/180);
+      var len=Math.sqrt(dlat*dlat+dlon*dlon);
+      if(len>maxLen){maxLen=len;mainB=((Math.atan2(dlon,dlat)*180/Math.PI)+360)%360;}
+    }
+    var f1=(mainB+90)%360, f2=(mainB-90+360)%360;
+    var d1=Math.min(Math.abs(f1-180),360-Math.abs(f1-180));
+    var d2=Math.min(Math.abs(f2-180),360-Math.abs(f2-180));
+    var bestAz=Math.round(d1<d2?f1:f2);
+    setAnaStatus('ok','✓ '+lat.toFixed(4)+'°N, '+lon.toFixed(4)+'°E — Bâtiment trouvé');
+    showOriResult(bestAz);
+  }catch(e){
+    setAnaStatus('err','⚠ '+e.message);
+    showManualGrid();
+  }
+  document.getElementById('anaBtn').disabled=false;
+}
+
+function showOriResult(az){
+  ANA.az=az;
+  ANA.oriKey=azToSimKey(az);
+  var dir=getDir(az);
+  var corr=azCorr(az);
+  var prodPerKwc=Math.round(1050*corr*0.80);
+  var heures=Math.round(1050*corr);
+  var pct=Math.round(corr*100);
+  document.getElementById('oriResIcon').textContent=dir.icon;
+  document.getElementById('oriResName').textContent=dir.label;
+  document.getElementById('oriResName').style.color=dir.cls==='good'?'#22C55E':dir.cls==='mid'?'#F5A623':'#ef4444';
+  document.getElementById('oriResAz').textContent='Azimut '+az+'° · Pan le plus favorable';
+  document.getElementById('oriResProd').textContent=prodPerKwc;
+  document.getElementById('oriResH').textContent=heures;
+  document.getElementById('oriResPct').textContent=pct+'%';
+  var resEl=document.getElementById('oriResult');
+  resEl.className='ori-result '+(dir.cls==='good'?'good':dir.cls==='mid'?'mid':'bad');
+  document.getElementById('oriResultWrap').style.display='block';
+}
+
+function showManualGrid(){
+  var g=document.getElementById('manualGrid');
+  g.innerHTML='';
+  ANA.DIRS.forEach(function(d){
+    var btn=document.createElement('button');
+    btn.className='m-btn '+d.cls+(ANA.az===d.az?' sel':'');
+    btn.innerHTML='<div>'+d.label+'</div><div style="font-size:11px">'+d.icon+'</div>';
+    btn.onclick=function(){
+      document.querySelectorAll('.m-btn').forEach(function(b){b.classList.remove('sel');});
+      btn.classList.add('sel');
+      ANA.az=d.az;
+      ANA.oriKey=azToSimKey(d.az);
+      document.getElementById('manualUseBtn').style.display='block';
+    };
+    g.appendChild(btn);
+  });
+  document.getElementById('manualWrap').style.display='block';
+  if(ANA.az!==null) document.getElementById('manualUseBtn').style.display='block';
+}
+
+function useOrientation(){
+  if(ANA.oriKey===null) return;
+  var btns=document.getElementById('gor').querySelectorAll('.b');
+  var keyMap={'SO':'SO','S':'S','SE':'SE','E':'E','O':'O'};
+  var k=keyMap[ANA.oriKey]||'S';
+  btns.forEach(function(b){
+    b.classList.remove('on');
+    if(b.textContent.indexOf(k==='SO'?'Sud-Ouest':k==='S'?'Plein Sud':k==='SE'?'Sud-Est':k==='E'?'Est':'Ouest')!==-1
+       &&(k!=='S'||b.textContent.indexOf('Sud-Ouest')===-1&&b.textContent.indexOf('Sud-Est')===-1)){
+      b.classList.add('on');
+    }
+  });
+  D.orient=k;
+  document.getElementById('ori-detected-banner').style.display='block';
+  closeModal();
+  go(3);
+}
 </script>
 </body>
 </html>
